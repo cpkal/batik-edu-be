@@ -1,3 +1,4 @@
+from services.batik.classification import BatikClassificationService
 from dependency_injector import containers, providers
 from google import genai
 from pinecone import Pinecone
@@ -43,4 +44,15 @@ class Container(containers.DeclarativeContainer):
     lambda session, z_dim: BatikGenerationService(session, z_dim),
     session=onnx_session,
     z_dim=100
+  )
+
+  onnx_session_classification = providers.Singleton(
+    ort.InferenceSession,
+    "models/mobilenetv3_batik_best_v2.onnx",
+    providers.Singleton(ort.SessionOptions)
+  )
+
+  batik_classification_service = providers.Singleton(
+    lambda session: BatikClassificationService(session),
+    session=onnx_session_classification
   )

@@ -1,7 +1,5 @@
 flask
 flask-cors
-flask-jwt-extended
-passlib[bcrypt]
 pinecone
 google-genai
 dependency-injector

@@ -26,9 +26,6 @@ def batik_chatbot(
 def batik_generate_image(
     batik_generation_service = Provide[Container.batik_generation_service],
 ):
-    data = request.get_json()
-    # seed = data.get("seed")
-
     image_bytes = batik_generation_service.generate()
     b64 = base64.b64encode(image_bytes).decode("utf-8")
 
@@ -36,9 +33,18 @@ def batik_generate_image(
         "generatedImage": f"data:image/png;base64,{b64}"
     })
 
-    response = app.response_class(
-        response=image_bytes,
-        status=200,
-        mimetype="image/png"
-    )
-    return response
+@api.route("/batik/classify-image", methods=["POST"])
+@inject
+def batik_classify_image(
+    batik_classification_service = Provide[Container.batik_classification_service],
+):
+    if 'image' not in request.files:
+        return jsonify({"error": "image file is required"}), 400
+
+    image_file = request.files['image']
+    image_path = f"/tmp/{image_file.filename}"
+    image_file.save(image_path)
+
+    result = batik_classification_service.classify(image_path)
+
+    return jsonify(result)
