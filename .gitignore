@@ -1,0 +1,79 @@
+# ===============================
+# Python
+# ===============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.env/
+.envrc
+.venv/
+
+# ===============================
+# Environment / Secrets
+# ===============================
+.env
+*.env
+.env.*
+!.env.example
+
+# ===============================
+# Flask
+# ===============================
+instance/
+.webassets-cache
+
+# ===============================
+# Logs
+# ===============================
+*.log
+logs/
+*.out
+
+# ===============================
+# IDE / Editor
+# ===============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===============================
+# OS
+# ===============================
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Docker
+# ===============================
+docker-compose.override.yml
+
+# ===============================
+# Model / Vector Data
+# ===============================
+pinecone_data/
+faiss_index/
+vectorstore/
+
+# ===============================
+# Notebooks / Experiments
+# ===============================
+*.ipynb
+notebooks/
+experiments/
+
+# ===============================
+# Build / Dist
+# ===============================
+build/
+dist/
+*.egg-info/

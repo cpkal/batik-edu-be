@@ -1,0 +1,26 @@
+from flask import Flask
+import logging
+
+def register_error_handlers(app):
+
+    @app.errorhandler(400)
+    def bad_request(e):
+      return jsonify({
+        "error": "BadRequest",
+        "message": str(e)
+      }), 400
+
+    @app.errorhandler(404)
+    def not_found(e):
+      return jsonify({
+        "error": "NotFound",
+        "message": "Endpoint not found"
+      }), 404
+
+    @app.errorhandler(500)
+    def internal_error(e):
+      logging.exception(e)
+      return jsonify({
+        "error": "InternalServerError",
+        "message": "Something went wrong"
+      }), 500
