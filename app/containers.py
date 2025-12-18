@@ -1,12 +1,15 @@
+from repositories.batik_image import BatikImageRepository
+from services.batik.batik_image import BatikImageService
 from services.batik.classification import BatikClassificationService
 from dependency_injector import containers, providers
 from google import genai
 from pinecone import Pinecone
 import onnxruntime as ort
+from pymongo import MongoClient
 
 from services.batik.rag import RAGService
 from services.batik.generator import BatikGenerationService
-from config import GEMINI_API_KEY, PINECONE_API_KEY, PINECONE_INDEX_NAME
+from config import GEMINI_API_KEY, PINECONE_API_KEY, PINECONE_INDEX_NAME, MONGO_URI
 
 class Container(containers.DeclarativeContainer):
   wiring_config = containers.WiringConfiguration(
@@ -55,4 +58,30 @@ class Container(containers.DeclarativeContainer):
   batik_classification_service = providers.Singleton(
     lambda session: BatikClassificationService(session),
     session=onnx_session_classification
+  )
+
+  # mongo using mongodb atlas
+  mongo_client = providers.Singleton(
+    MongoClient,
+    MONGO_URI
+  )
+
+  mongo_db = providers.Singleton(
+    lambda client: client.get_database("batik_edu_db"),
+    client=mongo_client
+  )
+
+  batik_collection = providers.Factory(
+    lambda db: db.get_collection("batik_images"),
+    db=mongo_db
+  )
+
+  batik_image_repository = providers.Factory(
+    BatikImageRepository,
+    collection=batik_collection
+  )
+
+  batik_image_service = providers.Singleton(
+    lambda repository: BatikImageService(repository),
+    repository=batik_image_repository
   )

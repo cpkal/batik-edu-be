@@ -1,3 +1,5 @@
+import requests
+from config import SD_API_URL
 import onnxruntime as ort
 import numpy as np
 from PIL import Image
@@ -50,3 +52,18 @@ class BatikGenerationService:
       pil_img.save(buf, format="PNG")
 
       return buf.getvalue()
+    
+    def generate_from_prompt(self, prompt: str, steps: int = 20, cfg_scale: float = 7.5) -> bytes:
+        response = requests.post(f"{SD_API_URL}/generate", json={
+            "prompt": prompt,
+            "steps": steps,
+            "cfg_scale": cfg_scale,
+        })
+
+        image_base64 = response.json().get("image_base64")
+
+        if response.status_code == 200:
+            return image_base64
+        else: 
+            return None
+        

@@ -7,3 +7,5 @@ python-dotenv
 numpy
 onnxruntime
 Pillow
+requests
+pymongo
